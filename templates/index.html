@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+ {% if current_user.is_authenticated %}
+        <div class="d-inline-block col-3    ">
+        <a href="news" class="btn btn-secondary">Добавить новость</a>
+            </div>
+
+
+    {% endif %}
+            <div class="d-inline-block col-3">
+            <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.sort( class="browser-default custom-select d-inline") }}
+            {{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <div>{{ message }}</div>
+    </form>
+                </div>
+
+
+
+                    <div class="d-inline-block col-3">
+            <form action="" method="post">
+        {{ form2.hidden_tag() }}
+        <p>
+            {{ form2.filter(class="browser-default custom-select d-inline") }}
+            {{ form2.submit(type="submit", class="btn btn-primary") }}</p>
+        <div>{{ message }}</div>
+    </form>
+                </div>
+
+
+
+
+
+
+<h1>Записи в блоге</h1>
+{% for item in news%}
+<div class="col-md6 mb-4  border rounded">
+    <h2>{{item.title}}</h2>
+    <div>
+        {{item.content}}
+    </div>
+    <div >
+        Автор - {{item.user.name}}, Дата написания - {{item.created_date}}
+    </div>
+
+    <div>
+        Рейтинг {{item.rate}}
+    </div>
+    {% for item2 in item.comments%}
+    <div class="    ml-3 mb-1 border rounded">
+
+
+         {{item2.text}}
+
+        <br>Автор - {{item2.user.name}}
+        Дата написания - {{item2.created_date}}
+    </div>
+    {% endfor %}
+
+    {% if current_user.is_authenticated %}
+    <div>
+        <a href="/like/{{ item.id }}" class="btn btn-success">Like</a>
+        <a href="/dislike/{{ item.id }}" class="btn btn-danger">Dis</a>
+        <a href="/add_comment/{{ item.id }}" class="btn btn-secondary">Добавить комментарий</a>
+
+        {% if current_user.id == item.user.id %}
+        <a href="/news/{{ item.id }}" class="btn btn-warning">Изменить</a>
+        <a href="/news_delete/{{ item.id }}" class="btn btn-warning">Удалить</a>
+
+        {% endif %}
+    </div>
+{% endif %}
+</div>
+{% endfor %}
+{% endblock %}
+
+
